@@ -1,0 +1,99 @@
+:css
+  .facets-wrapper{
+  }
+  .facets {
+    background-color: #f8f8f8;
+    padding: 1em;
+    color: rgb(56, 166, 203);
+    font-family: Arial;
+    display: inline-block;
+    margin: 0 auto;
+  }
+  .funder {
+    margin-top: .3em;
+    margin-buttom: .3em;
+    font-size: 12px_
+  }
+  .link:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .funder-level0{
+    border-color: rgb(208, 208, 208);
+    border-style: none none solid none;
+    border-width: 1px;
+    padding-top: .5em;
+    padding-bottom: .5em;
+  }
+  .has_more{
+    cursor: pointer;
+  }
+  .funder-h1-0{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .funder-h1-1{
+    font-size: 13px;
+  }
+  .funder-level0:first-child{
+    border-style: solid none solid none;
+  }
+  .funder-level0:last-child{
+    border-style: solid none solid none;
+  }
+
+  .funder-id{
+    margin-right: 10px;
+    font-size: 13px;
+  }
+  .more {
+    float: right;
+    color: rgb(208, 208, 208);
+  }
+  .funder:hover .more {
+    color: black;
+  }
+
+:javascript
+  $(document).ready(function() {
+    $(".funder[parent_id='0']" ).show();
+
+    $( ".funder" ).on("click", function() {
+      that = $(this)
+      level = parseInt(that.attr("level"));
+      id =  that.attr("funder_id");
+
+      if(parseInt(that.nextAll(':visible').first().attr('level'))<=level){ // Show
+        console.log("SHOW");
+        $(".funder[parent_id="+id+"]").show();
+      }else{ //hide
+        console.log("HIDE");
+        that.nextUntil(".funder[level="+level+"]").hide();
+      }
+
+    });
+  });
+
+%div.navbar.navbar-default
+  %div.container-fluid
+    %a.navbar-brand{:href => "/"} Funder IDS
+    %a.btn.btn-default.navbar-btn{href: '/funders.csv'}
+      %span.glyphicon.glyphicon-circle-arrow-down
+      CSV
+    %a.btn.btn-default.navbar-btn{href: '/funders.xls'}
+      %span.glyphicon.glyphicon-circle-arrow-down
+      XLS
+%div.row
+  %div.col-md-3
+  %div.col-md-6
+    %div.facets
+      %div
+      - render_top_level_funders(funders) do |name, id, level, parent_id, more|
+        %div{:class => "funder funder-level#{level} #{('has_more' if more)}", level: level, :funder_id => id, :parent_id => parent_id, :style => "display:none;" }
+          %span.funder-id= id
+          %span{:class =>"link funder-h1-#{level}", :style => "padding-left:#{(level)*20}px;"}= name
+          -if more
+            %span.more.glyphicon.glyphicon-plus
+
+  %div.col-md-3

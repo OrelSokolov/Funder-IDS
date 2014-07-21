@@ -1,0 +1,6 @@
+development:
+  sessions:
+    default:
+      database: funders
+      hosts:
+        - localhost:27017
