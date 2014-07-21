@@ -12,15 +12,22 @@ TOP_LEVEL_FUNDERS = [
     100000738]
 
 module Funders
+  def new_funder(options = {})
+    { id: 0,
+      name: "",
+      level: 0,
+      parent_id: 0,
+      descendants: [] }.merge options
+  end
+
   def get_funder_and_its_descendants(funder_id, children_storage, level, parent_id=0)
     uri = URI("http://api.crossref.org/funders/10.13039/#{funder_id}")
     response = JSON.parse(Net::HTTP.get(uri))
 
-    funder = { id: funder_id,
-               name: response["message"]["name"],
-               level: level,
-               parent_id: parent_id,
-               descendants: [] }
+    funder =  new_funder( id: funder_id,
+                          name: response["message"]["name"],
+                          level: level,
+                          parent_id: parent_id)
     children_storage << funder
 
     children_ids = response["message"]["descendants"]

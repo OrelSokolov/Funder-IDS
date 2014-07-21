@@ -4,28 +4,43 @@ require 'haml'
 require 'coffee_script'
 require 'csv'
 require 'sheets'
+require 'moped'
 
 require_relative './lib/funders.rb'
+require_relative './lib/time.rb'
 
 ROOT=File.dirname(__FILE__)
 json_filename = File.join(ROOT, "data.json")
 xls_filename = File.join(ROOT, "public/funders.xls")
 csv_filename = File.join(ROOT, "public/funders.csv")
 
-# Mongoid.load!(File.join(ROOT, '/config/mongoid.yml'))
+session = Moped::Session.new([ "127.0.0.1:27017" ])
+session.use "funders"
+
 
 helpers do
   include Funders
+
+
+  def funders_from_db(session)
+    criteria = Time.now.to_hash(only: [:day, :month, :year])
+    if session[:ids].find(criteria).count > 0
+      funders = session[:ids].find(criteria).first.to_hash[:funders]
+    else
+      funders = [new_funder(name: "Please, update funders")]
+    end
+  end
 end
 
 
 get '/'  do
-  funders = get_funders_and_save(json_filename, csv_filename, xls_filename)
+  funders = funders_from_db(session)
   haml :funders_ids, locals: { funders: funders }
 end
 
 get '/json', provides: :json  do
-  funders = get_funders_and_save(json_filename, csv_filename, xls_filename)
+  funders = funders_from_db(session)
+
   funders.to_json
 end
 
