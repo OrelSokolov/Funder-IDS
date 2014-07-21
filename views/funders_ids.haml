@@ -55,25 +55,22 @@
     color: black;
   }
 
-:javascript
-  $(document).ready(function() {
-    $(".funder[parent_id='0']" ).show();
+:coffeescript
+  $(document).ready ->
+    $(".funder[parent_id='0']").show()
 
-    $( ".funder" ).on("click", function() {
+    $(".funder").on "click", ->
       that = $(this)
-      level = parseInt(that.attr("level"));
-      id =  that.attr("funder_id");
+      level = parseInt(that.attr("level"))
+      id = that.attr("funder_id")
+      more = that.find(".more")
 
-      if(parseInt(that.nextAll(':visible').first().attr('level'))<=level){ // Show
-        console.log("SHOW");
-        $(".funder[parent_id="+id+"]").show();
-      }else{ //hide
-        console.log("HIDE");
-        that.nextUntil(".funder[level="+level+"]").hide();
-      }
-
-    });
-  });
+      if parseInt(that.nextAll(":visible").first().attr("level")) <= level # Show
+        $(".funder[parent_id=" + id + "]").show()
+        more.removeClass("glyphicon-plus").addClass "glyphicon-minus"
+      else #hide
+        more.removeClass("glyphicon-minus").addClass "glyphicon-plus"
+        that.nextUntil(".funder[level=" + level + "]").hide()
 
 %div.navbar.navbar-default
   %div.container-fluid
