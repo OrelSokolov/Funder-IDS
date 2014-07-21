@@ -71,14 +71,23 @@ module Funders
     rows.uniq!.sort
   end
 
+  def to_csv(table, file)
+    CSV.open(file, "wb") do |csv|
+      table.each do |row|
+        csv << row
+      end
+    end
+  end
+
   def get_funders_and_save(json_file, csv_file, xls_file)
     unless File.exists? json_file
       funders = get_top_level_funders
       File.write(json_file, Marshal.dump(funders))
 
-      funders_sheet  = Sheets::Base.new( [["TOP FUNDER NAME", "TOP FUNDER ID", "FUNDER NAME", "FUNDER ID"]].concat to_table(funders) )
+      funders_table = to_table(funders)
+      funders_sheet = Sheets::Base.new( [["TOP FUNDER NAME", "TOP FUNDER ID", "FUNDER NAME", "FUNDER ID"]].concat  funders_table)
       File.write(xls_file, funders_sheet.to_xls)
-      File.write(csv_file, funders_sheet.to_csv)
+      to_csv(funders_table, csv_file)
     else
       funders = Marshal.load(File.read(json_file))
     end
