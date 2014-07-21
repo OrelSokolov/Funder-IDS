@@ -13,7 +13,7 @@ csv_filename = File.join(ROOT, "public/funders.csv")
 
 namespace "funders" do
   task "update" do
-    [json_filename, xls_filename, csv_filename].each{|file|File.delete(file)}
+    [json_filename, xls_filename, csv_filename].each{|file|File.delete(file) if File.exists? file}
     FundersManager.new.get_funders_and_save(json_filename, csv_filename, xls_filename)
   end
 
