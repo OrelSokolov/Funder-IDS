@@ -45,7 +45,7 @@ get '/json', provides: :json  do
   funders.to_json
 end
 
-get '/temp' do
+get '/funders_list_ids.json' do
   funders_list = to_list(funders_from_db(session))
   funders_list.to_json
 end
