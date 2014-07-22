@@ -17,6 +17,7 @@ csv_filename = File.join(ROOT, "public/funders.csv")
 session = Moped::Session.new([ "127.0.0.1:27017" ])
 session.use "funders"
 
+set :port, 3456
 
 helpers do
   include Funders
@@ -44,3 +45,7 @@ get '/json', provides: :json  do
   funders.to_json
 end
 
+get '/temp' do
+  funders_list = to_list(funders_from_db(session))
+  funders_list.to_json
+end

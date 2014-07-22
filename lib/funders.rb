@@ -78,6 +78,16 @@ module Funders
     rows.uniq!.sort
   end
 
+  def to_list(top_level_funders)
+    rows = []
+    top_level_funders.each do |toplevel_funder|
+      recursive_get_descandants(toplevel_funder).each do |descendant|
+        rows << { name: descendant[:name], id: descendant[:id] }
+      end
+    end
+    rows.uniq!
+  end
+
   def to_csv(table, file)
     CSV.open(file, "wb") do |csv|
       table.each do |row|
