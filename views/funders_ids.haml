@@ -73,7 +73,12 @@
         more.removeClass("glyphicon-plus").addClass "glyphicon-minus"
       else #hide
         more.removeClass("glyphicon-minus").addClass "glyphicon-plus"
-        that.nextUntil(".funder[level=" + level + "]").hide()
+        next_siblings = that.nextUntil(".funder[level=" + level + "]")
+        next_siblings.hide()
+        $.each next_siblings, (i, el) ->
+          more = $(el).find(".more")
+          more.removeClass("glyphicon-minus").addClass "glyphicon-plus"
+
 
 %div.navbar.navbar-default
   %div.container-fluid
