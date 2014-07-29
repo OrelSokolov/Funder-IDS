@@ -23,7 +23,7 @@ How to deploy:
 
 How to setup clean server (Debian 7.5)
 ======================================
-
+```
 sudo apt-get update && sudo apt-get upgrade
 sudo apt-get -y install mongodb
 
@@ -58,3 +58,5 @@ sudo mkdir /var/www
 sudo chown -R vagrant /var/www
 cd /var/www
 git clone https://github.com/OrelSokolov/funders_ids
+
+```
